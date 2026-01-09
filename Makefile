@@ -13,22 +13,24 @@ LD_FLAGS := -T gcc_lpc802.ld
 SRC_ASM := startup_lpc802.S main.S
 OBJ := $(patsubst %.S, %.o, $(SRC_ASM))
 
-BUILD_DIR := $(CURDIR)/build
+BUILD_DIR := build
 
-all: $(TARGET) build_info
+all: $(TARGET)
 
 $(TARGET): $(OBJ)
     # LD_FLAGS must come after due to link order
-	$(LD) $(addprefix $(BUILD_DIR)/, $^) $(LD_FLAGS) -o $(BUILD_DIR)/$@ --print-map > $(BUILD_DIR)/$(TARGET)_map.txt
-	$(OBJCOPY) -O binary $(BUILD_DIR)/$(TARGET) $(BUILD_DIR)/$(TARGET).bin
+    # TODO specify first file to link on command line (equivalent of using STARTUP())
+	$(LD) $(addprefix $(BUILD_DIR)/, $^) $(LD_FLAGS) -o $(BUILD_DIR)/$@ --print-map > $(BUILD_DIR)/$@_map.txt
+	$(OBJCOPY) -O binary $(BUILD_DIR)/$@ $(BUILD_DIR)/$@.bin
+	$(OBJDUMP) $(BUILD_DIR)/$@ --disassemble > $(BUILD_DIR)/$@_disassembly.txt
+	$(OBJDUMP) $(BUILD_DIR)/$@ --headers > $(BUILD_DIR)/$@_sections.txt
+	$(NM) $(BUILD_DIR)/$@ > $(BUILD_DIR)/$@_symbols.txt
 
 %.o: %.S
 	$(AS) $(AS_FLAGS) $< -o $(BUILD_DIR)/$@
-
-build_info: $(TARGET)
-	$(OBJDUMP) $(BUILD_DIR)/$(TARGET) --disassemble > $(BUILD_DIR)/$(TARGET)_disassembly.txt
-	$(OBJDUMP) $(BUILD_DIR)/$(TARGET) --headers > $(BUILD_DIR)/$(TARGET)_headers.txt
-	$(NM) $(BUILD_DIR)/$(TARGET) > $(BUILD_DIR)/$(TARGET)_symbols.txt
+	$(OBJDUMP) $(BUILD_DIR)/$@ --disassemble > $(BUILD_DIR)/$@_disassembly.txt
+	$(OBJDUMP) $(BUILD_DIR)/$@ --headers > $(BUILD_DIR)/$@_sections.txt
+	$(NM) $(BUILD_DIR)/$@ > $(BUILD_DIR)/$@_symbols.txt
 
 clean:
 	rm -rf build/*
