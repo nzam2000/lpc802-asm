@@ -22,7 +22,14 @@ SECTIONS
         LONG(Default_Handler | 1);
         LONG(Default_Handler | 1);
 
-        LONG(0); /* TODO checksum */
+        /* 2's compliment checksum of entires 0-7 */
+        /* required for boot ROM */
+        LONG(0 - (
+            __StackTop +
+            (Reset_Handler | 1) +
+            (HardFault_Handler | 1) +
+            (4 * (Default_Handler | 1))
+        ));
 
         LONG(0);
         LONG(0);
