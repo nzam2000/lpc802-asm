@@ -7,7 +7,7 @@ OBJCOPY := $(TOOLCHAIN)-objcopy
 OBJDUMP := $(TOOLCHAIN)-objdump
 NM := $(TOOLCHAIN)-nm
 
-AS_FLAGS :=
+AS_FLAGS := -g
 LD_FLAGS := -T gcc_lpc802.ld
 
 SRC_ASM := startup_lpc802.S main.S
