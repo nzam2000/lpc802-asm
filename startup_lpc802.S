@@ -33,6 +33,7 @@ Reset_Handler:
 .L_ZeroBss_2:
     cmp r1, r2
     blt .L_ZeroBss_1
+    b main
 
     .thumb_func
     .type HardFault_Handler, %function
