@@ -9,12 +9,19 @@
     .type Reset_Handler, %function
     .global Reset_Handler
 Reset_Handler:
-    ldr r0, =_etext
+    ldr r0, =_sdata_load
     ldr r1, =_sdata
     ldr r2, =_edata
-.L_copy_data_0:
+    b .L_CopyData_1
+.L_CopyData_0:
+    ldr r3, [r0]
+    str r3, [r1]
+    adds r0, #4
+    adds r1, #4
+.L_CopyData_1:
     cmp r1, r2
-    /* TODO */
+    blt .L_CopyData_0
+.L_ZeroBss:
 
     /* TODO add .size? */
 

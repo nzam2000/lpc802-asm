@@ -46,15 +46,17 @@ SECTIONS
     .text :
     {
          *(.text)
-         _etext = .;
     } >FLASH
 
-    .data :
+    .data : ALIGN(4)
     {
         _sdata = .;
         *(.data)
+        . = ALIGN(4);
         _edata = .;
     } >SRAM AT>FLASH
+
+    _sdata_load = LOADADDR(.data);
 
     .bss :
     {
