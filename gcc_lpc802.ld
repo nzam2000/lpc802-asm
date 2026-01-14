@@ -58,11 +58,12 @@ SECTIONS
 
     _sdata_load = LOADADDR(.data);
 
-    .bss :
+    .bss : ALIGN(4)
     {
         _sbss = .;
         *(.bss)
         *(COMMON)
+        . = ALIGN(4);
         _ebss = .;
     } >SRAM
 }
